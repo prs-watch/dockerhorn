@@ -16,7 +16,7 @@
         <el-table :data="searchResult" stripe max-height="300" v-loading="pulling">
           <el-table-column label="Official">
             <template slot-scope="scope">
-              <i class="el-icon-check" v-if="scope.row.official === true"/>
+              <i class="el-icon-check" v-if="scope.row.official === true" />
             </template>
           </el-table-column>
           <el-table-column prop="name" label="Image Name" />
@@ -61,7 +61,7 @@ const compareStars = (a, b) => {
   }
 
   return r;
-}
+};
 
 export default {
   data() {
@@ -75,16 +75,18 @@ export default {
   mounted() {
     this.$axios.get("/image/images").then(res => {
       const images = res.data.Images;
-      console.log(images)
       let rows = [];
       images.forEach(image => {
-        const row = {
-          id: image.Id,
-          repo: image.RepoTags[0].split(":")[0],
-          version: image.RepoTags[0].split(":")[1],
-          size: image.Size
-        };
-        rows.push(row);
+        const repoTags = image.RepoTags;
+        repoTags.forEach(repoTag => {
+          const row = {
+            id: image.Id,
+            repo: repoTag.split(":")[0],
+            version: repoTag.split(":")[1],
+            size: image.Size
+          };
+          rows.push(row);
+        });
       });
       this.images = rows;
     });
@@ -98,22 +100,22 @@ export default {
     execSearch(keyword) {
       this.$axios.get("/image/search/" + keyword).then(res => {
         const images = res.data.Images;
-        images.sort(compareStars)
+        images.sort(compareStars);
         let rows = [];
         images.forEach(image => {
           const row = {
-          stars: image.star_count,
-          official: image.is_official,
-          name: image.name,
-          description: image.description
-        };
-        rows.push(row);
-        })
-        this.searchResult = rows
+            stars: image.star_count,
+            official: image.is_official,
+            name: image.name,
+            description: image.description
+          };
+          rows.push(row);
+        });
+        this.searchResult = rows;
       });
     },
     execPull(name) {
-      this.pulling = true
+      this.pulling = true;
       this.$axios.get("/image/pull/" + name).then(res => {
         window.location.reload(true);
       });

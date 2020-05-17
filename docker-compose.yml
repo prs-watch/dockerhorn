@@ -20,4 +20,4 @@ services:
         volumes:
             - ./dockerhorn-frontend:/workspace
         tty: true
-        command: npm run dev
+        command: bash -c "npm run build && npm run start"

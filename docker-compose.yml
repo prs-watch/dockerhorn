@@ -1,0 +1,23 @@
+version: "3"
+
+services: 
+    golang:
+        image: dockerhorn-backend:latest
+        container_name: dockerhorn-backend
+        working_dir: /go/src/github.com/prs-watch/dockerhorn
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./dockerhorn-backend:/go/src/github.com/prs-watch/dockerhorn
+        ports:
+            - "9999:9999"
+        command: go run main.go
+    nuxt:
+        image: dockerhorn-frontend:latest
+        container_name: dockerhorn-frontend
+        working_dir: /workspace
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./dockerhorn-frontend:/workspace
+        tty: true
+        command: npm run dev

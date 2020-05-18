@@ -1,8 +1,8 @@
 version: "3"
 
 services: 
-    golang:
-        image: dockerhorn-backend:latest
+    backend:
+        build: ./images/backend
         container_name: dockerhorn-backend
         working_dir: /go/src/github.com/prs-watch/dockerhorn
         volumes:
@@ -10,9 +10,9 @@ services:
             - ./dockerhorn-backend:/go/src/github.com/prs-watch/dockerhorn
         ports:
             - "9999:9999"
-        command: go run main.go
-    nuxt:
-        image: dockerhorn-frontend:latest
+        command: go run ./main.go
+    frontend:
+        build: ./images/frontend
         container_name: dockerhorn-frontend
         working_dir: /workspace
         ports:

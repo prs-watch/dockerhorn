@@ -1,22 +1,16 @@
 # dockerhorn-frontend
 
-> 
+`dockerhorn` frontend project.
 
-## Build Setup
+## For Developers
+
+Like `Nuxt.js` project, you can build and run `dockerhorn` frontend.
 
 ```bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
+# build
 $ npm run build
+# run as dev mode
+$ npm run dev
+# run as product mode
 $ npm run start
-
-# generate static project
-$ npm run generate
 ```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).

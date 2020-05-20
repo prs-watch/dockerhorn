@@ -102,7 +102,7 @@ export default {
     },
     execSearch(keyword) {
       this.$axios.get("/image/search/" + keyword).then(res => {
-        if (err.data.Error != null) {
+        if (res.data.Error != null) {
           this.$message.error(err.data.Error);
           return
         }
@@ -124,7 +124,7 @@ export default {
     execPull(name) {
       this.pulling = true;
       this.$axios.get("/image/pull/" + name).then(res => {
-        if (err.data.Error != null) {
+        if (res.data.Error != null) {
           this.$message.error(err.data.Error);
           return
         }

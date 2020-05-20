@@ -14,101 +14,106 @@ var docker = getDocker()
 /** --- Docker --- */
 
 // InfoDocker return docker info.
-func InfoDocker() types.Info {
+func InfoDocker() (types.Info, error) {
 	info, err := docker.Info(context.Background())
 	if err != nil {
-		panic(err)
+		return types.Info{}, err
 	}
-	return info
+	return info, nil
 }
 
 /** --- Container --- */
 
 // ListContainers return containers.
-func ListContainers() []types.Container {
+func ListContainers() ([]types.Container, error) {
 	containers, err := docker.ContainerList(context.Background(), types.ContainerListOptions{All: true})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return containers
+	return containers, nil
 }
 
 // StartContainer start container.
-func StartContainer(containerID string) {
+func StartContainer(containerID string) error {
 	err := docker.ContainerStart(context.Background(), containerID, types.ContainerStartOptions{})
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
 
 // StopContainer stop container.
-func StopContainer(containerID string) {
+func StopContainer(containerID string) error {
 	err := docker.ContainerStop(context.Background(), containerID, nil)
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
 
 // RemoveContainer remove container.
-func RemoveContainer(containerID string) {
+func RemoveContainer(containerID string) error {
 	err := docker.ContainerRemove(context.Background(), containerID, types.ContainerRemoveOptions{})
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
 
 // InspectContainer inspect specific container.
-func InspectContainer(containerID string) types.ContainerJSON {
+func InspectContainer(containerID string) (types.ContainerJSON, error) {
 	inspect, err := docker.ContainerInspect(context.Background(), containerID)
 	if err != nil {
-		panic(err)
+		return types.ContainerJSON{}, err
 	}
-	return inspect
+	return inspect, nil
 }
 
 // CommitContainer commit container.
-func CommitContainer(containerID string, repo string, tag string) {
+func CommitContainer(containerID string, repo string, tag string) error {
 	_, err := docker.ContainerCommit(context.Background(), containerID, types.ContainerCommitOptions{
 		Reference: repo + ":" + tag,
 	})
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
 
 /** --- Image --- */
 
 // ListImages return images.
-func ListImages() []types.ImageSummary {
+func ListImages() ([]types.ImageSummary, error) {
 	images, err := docker.ImageList(context.Background(), types.ImageListOptions{})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return images
+	return images, nil
 }
 
 // RemoveImage remove image.
-func RemoveImage(imageID string) {
+func RemoveImage(imageID string) error {
 	_, err := docker.ImageRemove(context.Background(), imageID, types.ImageRemoveOptions{})
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
 
 // SearchImage search images from DockerHub.
-func SearchImage(keyword string) []registry.SearchResult {
+func SearchImage(keyword string) ([]registry.SearchResult, error) {
 	images, err := docker.ImageSearch(context.Background(), keyword, types.ImageSearchOptions{Limit: 100})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return images
+	return images, nil
 }
 
 // PullImage pull image.
-func PullImage(name string) {
+func PullImage(name string) error {
 	closer, err := docker.ImagePull(context.Background(), name, types.ImagePullOptions{})
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer closer.Close()
 
@@ -116,6 +121,7 @@ func PullImage(name string) {
 	for scanner.Scan() {
 	}
 	if err := scanner.Err(); err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }

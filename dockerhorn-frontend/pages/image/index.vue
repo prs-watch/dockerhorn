@@ -59,7 +59,6 @@ const compareStars = (a, b) => {
   } else if (a.star_count > b.star_count) {
     r = -1;
   }
-
   return r;
 };
 
@@ -94,11 +93,19 @@ export default {
   methods: {
     execRemove(id) {
       this.$axios.get("/image/remove/" + id).then(res => {
+        if (res.data.Error != null) {
+          this.$message.error(res.data.Error);
+          return
+        }
         window.location.reload(true);
       });
     },
     execSearch(keyword) {
       this.$axios.get("/image/search/" + keyword).then(res => {
+        if (res.data.Error != null) {
+          this.$message.error(err.data.Error);
+          return
+        }
         const images = res.data.Images;
         images.sort(compareStars);
         let rows = [];
@@ -117,6 +124,10 @@ export default {
     execPull(name) {
       this.pulling = true;
       this.$axios.get("/image/pull/" + name).then(res => {
+        if (res.data.Error != null) {
+          this.$message.error(err.data.Error);
+          return
+        }
         window.location.reload(true);
       });
     }

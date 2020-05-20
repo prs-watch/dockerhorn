@@ -41,20 +41,16 @@
         </el-table-column>
       </el-table>
 
-      <el-dialog
-        :visible.sync="dialogVisible"
-        width="50%"
-        :before-close="handleClose"
-      >
+      <el-dialog :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
         <el-form :rules="rules">
           <el-form-item label="Container ID">
             <el-input :disabled="true" v-model="containerID" />
           </el-form-item>
           <el-form-item label="Repository" prop="repo">
-            <el-input v-model="repo"/>
+            <el-input v-model="repo" />
           </el-form-item>
           <el-form-item label="Tag" prop="tag">
-            <el-input v-model="tag"/>
+            <el-input v-model="tag" />
           </el-form-item>
           <el-form-item>
             <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -76,13 +72,9 @@ export default {
       repo: "",
       tag: "",
       rules: {
-        repo: [
-          {required: true, message: "Repository must be filled in!"}
-        ],
-        tag: [
-          {required: true, message: "Tag must be filled in!"}
-        ]
-      },
+        repo: [{ required: true, message: "Repository must be filled in!" }],
+        tag: [{ required: true, message: "Tag must be filled in!" }]
+      }
     };
   },
   mounted() {
@@ -105,16 +97,28 @@ export default {
   methods: {
     execStop(id) {
       this.$axios.get("/container/stop/" + id).then(res => {
+        if (res.data.Error != null) {
+          this.$message.error(err.data.Error);
+          return;
+        }
         window.location.reload(true);
       });
     },
     execStart(id) {
       this.$axios.get("/container/start/" + id).then(res => {
+        if (res.data.Error != null) {
+          this.$message.error(err.data.Error);
+          return;
+        }
         window.location.reload(true);
       });
     },
     execRemove(id) {
       this.$axios.get("/container/remove/" + id).then(res => {
+        if (res.data.Error != null) {
+          this.$message.error(err.data.Error);
+          return;
+        }
         window.location.reload(true);
       });
     },
@@ -133,9 +137,13 @@ export default {
             this.tag
         )
         .then(res => {
-          this.$router.push("/image")
+          if (res.data.Error != null) {
+            this.$message.error(err.data.Error);
+            return;
+          }
+          this.$router.push("/image");
         });
-    },
+    }
   }
 };
 </script>

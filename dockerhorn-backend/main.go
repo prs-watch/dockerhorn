@@ -44,7 +44,13 @@ func main() {
 /** --- Docker ---*/
 
 func infoDocker(w rest.ResponseWriter, r *rest.Request) {
-	info := docker.InfoDocker()
+	info, err := docker.InfoDocker()
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string]types.Info{
 		"Info": info,
 	})
@@ -54,7 +60,13 @@ func infoDocker(w rest.ResponseWriter, r *rest.Request) {
 
 // listContainers write containers' info.
 func listContainers(w rest.ResponseWriter, r *rest.Request) {
-	containers := docker.ListContainers()
+	containers, err := docker.ListContainers()
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string][]types.Container{
 		"Containers": containers,
 	})
@@ -63,7 +75,13 @@ func listContainers(w rest.ResponseWriter, r *rest.Request) {
 // inspectContainer write container inspected info.
 func inspectContainer(w rest.ResponseWriter, r *rest.Request) {
 	containerID := r.PathParam("containerID")
-	inspect := docker.InspectContainer(containerID)
+	inspect, err := docker.InspectContainer(containerID)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string]types.ContainerJSON{
 		"Inspect": inspect,
 	})
@@ -72,7 +90,13 @@ func inspectContainer(w rest.ResponseWriter, r *rest.Request) {
 // startContainer start container.
 func startContainer(w rest.ResponseWriter, r *rest.Request) {
 	containerID := r.PathParam("containerID")
-	docker.StartContainer(containerID)
+	err := docker.StartContainer(containerID)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string]string{
 		"Status": "OK",
 	})
@@ -81,7 +105,13 @@ func startContainer(w rest.ResponseWriter, r *rest.Request) {
 // stopContainer stop container.
 func stopContainer(w rest.ResponseWriter, r *rest.Request) {
 	containerID := r.PathParam("containerID")
-	docker.StopContainer(containerID)
+	err := docker.StopContainer(containerID)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string]string{
 		"Status": "OK",
 	})
@@ -90,7 +120,13 @@ func stopContainer(w rest.ResponseWriter, r *rest.Request) {
 // removeContainer remove container.
 func removeContainer(w rest.ResponseWriter, r *rest.Request) {
 	containerID := r.PathParam("containerID")
-	docker.RemoveContainer(containerID)
+	err := docker.RemoveContainer(containerID)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string]string{
 		"Status": "OK",
 	})
@@ -102,7 +138,13 @@ func commitContainer(w rest.ResponseWriter, r *rest.Request) {
 	query := r.URL.Query()
 	repo := query["repo"][0]
 	tag := query["tag"][0]
-	docker.CommitContainer(containerID, repo, tag)
+	err := docker.CommitContainer(containerID, repo, tag)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string]string{
 		"Status": "OK",
 	})
@@ -112,7 +154,13 @@ func commitContainer(w rest.ResponseWriter, r *rest.Request) {
 
 // listImages write images' info.
 func listImages(w rest.ResponseWriter, r *rest.Request) {
-	images := docker.ListImages()
+	images, err := docker.ListImages()
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string][]types.ImageSummary{
 		"Images": images,
 	})
@@ -121,7 +169,13 @@ func listImages(w rest.ResponseWriter, r *rest.Request) {
 // removeImage remove image.
 func removeImage(w rest.ResponseWriter, r *rest.Request) {
 	imageID := r.PathParam("imageID")
-	docker.RemoveImage(imageID)
+	err := docker.RemoveImage(imageID)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string]string{
 		"Status": "OK",
 	})
@@ -130,7 +184,13 @@ func removeImage(w rest.ResponseWriter, r *rest.Request) {
 // searchImage search images from DockerHub.
 func searchImage(w rest.ResponseWriter, r *rest.Request) {
 	keyword := r.PathParam("keyword")
-	images := docker.SearchImage(keyword)
+	images, err := docker.SearchImage(keyword)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string][]registry.SearchResult{
 		"Images": images,
 	})
@@ -139,7 +199,13 @@ func searchImage(w rest.ResponseWriter, r *rest.Request) {
 // pullImage pull image.
 func pullImage(w rest.ResponseWriter, r *rest.Request) {
 	name := r.PathParam("name")
-	docker.PullImage(name)
+	err := docker.PullImage(name)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
 	w.WriteJson(map[string]string{
 		"Status": "OK",
 	})

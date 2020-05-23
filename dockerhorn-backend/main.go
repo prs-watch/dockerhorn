@@ -28,6 +28,9 @@ func main() {
 		rest.Get("/container/stop/:containerID", stopContainer),
 		rest.Get("/container/remove/:containerID", removeContainer),
 		rest.Get("/container/commit/:containerID", commitContainer),
+		rest.Get("/container/pause/:containerID", pauseContainer),
+		rest.Get("/container/unpause/:containerID", unpauseContainer),
+		rest.Get("/container/rename/:containerID", renameContainer),
 		// routes for image
 		rest.Get("/image/images", listImages),
 		rest.Get("/image/remove/:imageID", removeImage),
@@ -139,6 +142,53 @@ func commitContainer(w rest.ResponseWriter, r *rest.Request) {
 	repo := query["repo"][0]
 	tag := query["tag"][0]
 	err := docker.CommitContainer(containerID, repo, tag)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
+	w.WriteJson(map[string]string{
+		"Status": "OK",
+	})
+}
+
+// pauseContainer pause container.
+func pauseContainer(w rest.ResponseWriter, r *rest.Request) {
+	containerID := r.PathParam("containerID")
+	err := docker.PauseContainer(containerID)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
+	w.WriteJson(map[string]string{
+		"Status": "OK",
+	})
+}
+
+// pauseContainer pause container.
+func unpauseContainer(w rest.ResponseWriter, r *rest.Request) {
+	containerID := r.PathParam("containerID")
+	err := docker.UnpauseContainer(containerID)
+	if err != nil {
+		w.WriteJson(map[string]string{
+			"Error": err.Error(),
+		})
+		return
+	}
+	w.WriteJson(map[string]string{
+		"Status": "OK",
+	})
+}
+
+// renameContainer rename container.
+func renameContainer(w rest.ResponseWriter, r *rest.Request) {
+	containerID := r.PathParam("containerID")
+	query := r.URL.Query()
+	name := query["name"][0]
+	err := docker.RenameContainer(containerID, name)
 	if err != nil {
 		w.WriteJson(map[string]string{
 			"Error": err.Error(),

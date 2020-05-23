@@ -22,7 +22,24 @@
               @click="execStop(scope.row.id)"
               v-if="scope.row.state === 'running'"
             >Stop</el-button>
-            <el-button type="primary" @click="execStart(scope.row.id)" v-else>Start</el-button>
+            <el-button
+              type="primary"
+              @click="execStart(scope.row.id)"
+              v-if="scope.row.state === 'exited'"
+            >Start</el-button>
+            <el-button
+              @click="execUnpause(scope.row.id)"
+              v-if="scope.row.state === 'paused'"
+            >Unpause</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column>
+          <template slot-scope="scope">
+            <el-button
+              type="info"
+              @click="execPause(scope.row.id)"
+              v-if="scope.row.state === 'running'"
+            >Pause</el-button>
           </template>
         </el-table-column>
         <el-table-column>
@@ -35,7 +52,7 @@
             <el-button
               type="danger"
               @click="execRemove(scope.row.id)"
-              v-if="scope.row.state !== 'running'"
+              v-if="scope.row.state === 'exited'"
             >Remove</el-button>
           </template>
         </el-table-column>
@@ -143,7 +160,25 @@ export default {
           }
           this.$router.push("/image");
         });
-    }
+    },
+    execPause(id) {
+      this.$axios.get("container/pause/" + id).then(res => {
+        if (res.data.Error != null) {
+          this.$message.error(err.data.Error);
+          return;
+        }
+        window.location.reload(true);
+      });
+    },
+    execUnpause(id) {
+      this.$axios.get("container/unpause/" + id).then(res => {
+        if (res.data.Error != null) {
+          this.$message.error(err.data.Error);
+          return;
+        }
+        window.location.reload(true);
+      });
+    },
   }
 };
 </script>

@@ -80,6 +80,33 @@ func CommitContainer(containerID string, repo string, tag string) error {
 	return nil
 }
 
+// PauseContainer pause container.
+func PauseContainer(containerID string) error {
+	err := docker.ContainerPause(context.Background(), containerID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UnpauseContainer unpause container.
+func UnpauseContainer(containerID string) error {
+	err := docker.ContainerUnpause(context.Background(), containerID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RenameContainer rename container.
+func RenameContainer(containerID string, newContainerName string) error {
+	err := docker.ContainerRename(context.Background(), containerID, newContainerName)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 /** --- Image --- */
 
 // ListImages return images.
